@@ -1,0 +1,50 @@
+---
+title: "Data Tidying"
+author: "Mary McCabe"
+date: "October 16, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Download packages to be able to use specific commands.
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+library(tidyr)
+```
+
+Read in catch data from INSERT CITATION and WEBSITE URL here.
+Right click on download link to directly read into to R.
+
+```{r}
+catch_df <- read.csv(url("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1", method = "libcurl"),
+                    stringsAsFactors = FALSE)
+head(catch_df)
+```
+
+%>% Pipe Operator
+Computer shortcut is Ctrl + Shft + m
+
+
+`select` the columns we need for analysis
+`gather` to move from wide to long
+key is associated with column names, value 
+`spread` to move from long to wide
+`rename` 
+
+```{r}
+catch_clean <- catch_df %>% 
+  #select(Region, Year, Chinook, Sockeye, Coho, Pink, Chum)
+  select(-All, -notesRegCode) %>% 
+  gather(key = "species", value = "catch", -Region, -Year) %>% 
+  rename(catch_thousands = catch)
+
+
+head(catch_clean)
+```
+
+```{r}
+
+```
