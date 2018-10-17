@@ -28,11 +28,11 @@ head(catch_df)
 Computer shortcut is Ctrl + Shft + m
 
 
-`select` the columns we need for analysis
-`gather` to move from wide to long
-key is associated with column names, value 
-`spread` to move from long to wide
-`rename` 
+`select` the columns we need for analysis  
+`gather` to move from wide to long  
+key is associated with column names, value  
+`spread` to move from long to wide  
+`rename` to rename a column
 
 ```{r}
 catch_clean <- catch_df %>% 
@@ -45,6 +45,41 @@ catch_clean <- catch_df %>%
 head(catch_clean)
 ```
 
-```{r}
+Testing for the Error
 
+```{r}
+test <- as.numeric(catch_clean$catch_thousands)
+i <- which(is.na(test) == T)
+print(i)
+catch_clean[i,]
+```
+
+`mutate` to create a new catch column
+
+```{r}
+catch_clean_mutated <- catch_clean %>%
+  mutate(catch_thousands = ifelse(catch_thousands == "I", 1, catch_thousands)) %>% 
+mutate(catch_thousands = as.numeric(catch_thousands)) %>% 
+mutate(catch = catch_thousands * 1000)
+
+
+head(catch_clean_mutated)
+```
+
+split using `group_by`
+
+```{r}
+catch_summarized <- catch_clean_mutated %>% 
+  group_by(Region, Year) %>% 
+  summarize(mean_catch = mean(catch),
+            n_obs = n())
+            
+
+head(catch_summarized)
+```
+
+```{r}
+catch_chinook <- catch_clean_mutated %>% 
+  filter(species == "Chinook") %>% 
+  arrange(-catch)
 ```
